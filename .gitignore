@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Node.js
+node_modules/
+dist/
+.DS_Store
+
+# User specific - Data & Temp
+downloads/
+mcs_server_manager/
+*.mp3
+*.mp4
+*.txt
+*.log
+
+# Old & Helper Scripts (Exclude from Repo)
+qishui_music_downloader.py
+qishui_auto_downloader.py
+try_full_version.py
+analyze_html.py
+check_duration.py
+二版.txt
+
+# IDE
+.vscode/
+.idea/
