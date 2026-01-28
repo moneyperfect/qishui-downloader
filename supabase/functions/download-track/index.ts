@@ -27,7 +27,7 @@ serve(async (req) => {
 
         console.log(`Processing URL: ${url}`)
 
-        // 2. Call Firecrawl
+        // 2. Call Firecrawl with Location set to CN to bypass geoblocking
         const scrapeResp = await fetch('https://api.firecrawl.dev/v1/scrape', {
             method: 'POST',
             headers: {
@@ -37,6 +37,9 @@ serve(async (req) => {
             body: JSON.stringify({
                 url: url,
                 formats: ['html'],
+                location: {
+                    country: "CN"
+                }
             })
         })
 
@@ -58,6 +61,8 @@ serve(async (req) => {
         const playUrlMatch = /"play_url":\s*"([^"]+)"/.exec(html)
 
         if (!playUrlMatch || !playUrlMatch[1]) {
+            // Log HTML length for debugging
+            console.error(`HTML Length: ${html.length}`)
             throw new Error('Could not find audio URL. The song might be VIP-only or the page structure has changed.')
         }
 
