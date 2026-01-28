@@ -1,0 +1,2 @@
+[functions.download-track]
+verify_jwt = false

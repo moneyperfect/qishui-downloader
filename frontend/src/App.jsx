@@ -83,7 +83,11 @@ export default function App() {
         setMessage('');
 
         try {
-            const response = await fetch('/api/download', {
+            // --- Supabase 迁移更新 ---
+            // 修改为你的 Supabase Function URL
+            // 格式: https://<project_ref>.supabase.co/functions/v1/download-track
+            const API_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://YOUR_PROJECT_REF.supabase.co/functions/v1/download-track';
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
