@@ -119,8 +119,29 @@ const SharePoster = ({ track, onClose }) => {
     const posterRef = useRef(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [posterUrl, setPosterUrl] = useState(null);
-    const vibeText = getVibeDescription(track.title);
+    const [vibeText, setVibeText] = useState('生成氛围中...');
+    const [vibeLoaded, setVibeLoaded] = useState(false);
     const today = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+
+    // Fetch AI-generated vibe description
+    useEffect(() => {
+        const fetchVibe = async () => {
+            try {
+                const response = await fetch('https://ipcgfdxhpypmfgqsyujh.supabase.co/functions/v1/generate-vibe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: track.title, artist: track.artist })
+                });
+                const data = await response.json();
+                setVibeText(data.vibe || getVibeDescription(track.title));
+            } catch (err) {
+                console.error('AI vibe fetch failed:', err);
+                setVibeText(getVibeDescription(track.title)); // Fallback to local
+            }
+            setVibeLoaded(true);
+        };
+        fetchVibe();
+    }, [track]);
 
     const generatePoster = async () => {
         if (!posterRef.current) return;
@@ -148,9 +169,12 @@ const SharePoster = ({ track, onClose }) => {
         link.click();
     };
 
+    // Generate poster after vibe is loaded
     useEffect(() => {
-        generatePoster();
-    }, []);
+        if (vibeLoaded) {
+            generatePoster();
+        }
+    }, [vibeLoaded]);
 
     return (
         <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
