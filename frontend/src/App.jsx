@@ -248,7 +248,7 @@ const SharePoster = ({ track, onClose }) => {
                         <div className="flex items-center gap-3 mt-2">
                             <div className="bg-white p-1 rounded-sm">
                                 <QRCodeSVG
-                                    value="https://qishui-downloader.vercel.app"
+                                    value="https://dl.leizhen2046.xyz"
                                     size={40}
                                     level="L"
                                     includeMargin={false}
@@ -404,6 +404,30 @@ const PlayerView = ({ track, onReset }) => {
                 <div className="relative group perspective-1000">
                     {/* Pulse Glow (The Aura) */}
                     <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vw] h-[75vw] md:w-[30rem] md:h-[30rem] rounded-full bg-gradient-to-tr ${track.colors[0]} to-${track.colors[1]} blur-[80px] transition-all duration-1000 ease-in-out ${isPlaying ? 'opacity-40 scale-105' : 'opacity-20 scale-90'}`} />
+
+                    {/* Mobile Audio Visualizer Bars - Only visible on mobile */}
+                    <div className={`md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] pointer-events-none z-10 transition-opacity duration-500 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}>
+                        {/* Circular Audio Bars */}
+                        {[...Array(24)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute left-1/2 top-1/2 origin-bottom"
+                                style={{
+                                    transform: `translate(-50%, -100%) rotate(${i * 15}deg)`,
+                                    height: '45vw'
+                                }}
+                            >
+                                <div
+                                    className={`w-[2px] bg-gradient-to-t from-orange-500/80 via-purple-500/60 to-transparent rounded-full ${isPlaying ? 'animate-equalizer' : ''}`}
+                                    style={{
+                                        height: `${12 + Math.sin(i * 0.7) * 8}%`,
+                                        animationDelay: `${i * 0.05}s`,
+                                        animationDuration: `${0.4 + Math.random() * 0.3}s`
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
 
                     {/* The Full-Bleed Vinyl */}
                     <div className="relative w-[80vw] h-[80vw] md:w-[32rem] md:h-[32rem] rounded-full shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden border border-white/5 transition-transform duration-700"
