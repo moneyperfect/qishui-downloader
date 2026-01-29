@@ -190,7 +190,7 @@ const SharePoster = ({ track, onClose }) => {
                 {/* Poster Preview - Ticket Stub Style */}
                 <div
                     ref={posterRef}
-                    className="w-full aspect-[3/4] rounded-xl overflow-hidden relative flex flex-col"
+                    className="w-full aspect-[3/4] rounded-3xl overflow-hidden relative flex flex-col border border-white/5"
                     style={{ minHeight: '420px' }}
                 >
                     {/* Blurred Cover Color Background */}
@@ -223,7 +223,7 @@ const SharePoster = ({ track, onClose }) => {
                         <div className="relative">
                             <div className="absolute -inset-4 bg-black/30 rounded-full blur-2xl" />
                             <div
-                                className="w-32 h-32 rounded-full overflow-hidden shadow-2xl border-4 border-black/30 relative"
+                                className="w-32 h-32 rounded-full overflow-hidden shadow-2xl border border-white/10 relative"
                                 style={{ boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
                             >
                                 <img
@@ -284,14 +284,8 @@ const SharePoster = ({ track, onClose }) => {
                         </div>
                     </div>
 
-                    {/* Ticket Stub Perforation Line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[1px] z-10"
-                        style={{
-                            backgroundImage: 'linear-gradient(90deg, transparent 0%, transparent 45%, white 45%, white 55%, transparent 55%, transparent 100%)',
-                            backgroundSize: '8px 1px',
-                            opacity: 0.15
-                        }}
-                    />
+                    {/* Ticket Stub Perforation - Dashed line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[1px] z-10 border-t border-dashed border-white/20" />
                 </div>
 
                 {/* Action Buttons - Two buttons side by side */}
@@ -521,15 +515,18 @@ const PlayerView = ({ track, onReset }) => {
                                 background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)'
                             }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-black/40 pointer-events-none" />
+                        {/* Plastic Gloss Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-transparent pointer-events-none" />
 
                         {/* Tiny Center Hole */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 bg-[#0a0a0a] rounded-full shadow-inner border border-white/10" />
                     </div>
                 </div>
 
-                {/* Title & Progress */}
-                <div className="mt-12 md:mt-16 w-full max-w-sm md:max-w-md px-8 text-center space-y-6 z-20">
+                {/* Title & Progress - Negative margin for overlay effect on mobile */}
+                <div className="-mt-8 md:mt-16 w-full max-w-sm md:max-w-md px-8 text-center space-y-6 z-20 relative">
+                    {/* White fade at top to create overlay illusion */}
+                    <div className="absolute -top-12 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#020202]/80 pointer-events-none md:hidden" />
                     <div className="max-w-[90vw] md:max-w-md">
                         <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight tracking-tight drop-shadow-xl font-serif line-clamp-2">
                             {track.title}
@@ -710,9 +707,9 @@ export default function App() {
                 <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[90%] bg-gradient-to-tl from-[#3300FF] via-[#1A0033] to-transparent blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
             </div>
 
-            {/* Global Film Grain Texture - Always on top */}
+            {/* Global Film Grain Texture - Above backgrounds, below text (z-50) */}
             <div
-                className="fixed inset-0 z-50 pointer-events-none opacity-[0.08] mix-blend-overlay"
+                className="absolute inset-0 z-50 pointer-events-none mix-blend-overlay opacity-[0.07]"
                 style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}
             />
 
