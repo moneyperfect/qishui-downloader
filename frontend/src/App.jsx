@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { ArrowRight, Sparkles, RefreshCw, Share2, Play, Pause, Heart, Smartphone } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { ArrowRight, Sparkles, RefreshCw, Share2, Play, Pause, Heart, Smartphone, Download, X } from 'lucide-react';
 
 // --- Helper: Typewriter ---
 const useTypewriter = (phrases, typingSpeed = 80, deletingSpeed = 40, pauseTime = 2000) => {
@@ -87,11 +88,165 @@ const MobileOrbs = () => (
     </div>
 );
 
+// --- Helper: Generate Vibe Description ---
+const getVibeDescription = (title) => {
+    const t = (title || '').toLowerCase();
+    if (t.includes('love') || t.includes('heart') || t.includes('kiss') || t.includes('romance'))
+        return '心动时刻的浪漫絮语 💕';
+    if (t.includes('night') || t.includes('dark') || t.includes('moon') || t.includes('midnight'))
+        return '深夜独处的温柔治愈 🌙';
+    if (t.includes('sun') || t.includes('summer') || t.includes('happy') || t.includes('bright'))
+        return '阳光洒落的明媚午后 ☀️';
+    if (t.includes('rain') || t.includes('sad') || t.includes('cry') || t.includes('tear'))
+        return '雨天窗边的静谧思绪 🌧️';
+    if (t.includes('dance') || t.includes('party') || t.includes('club') || t.includes('beat'))
+        return '律动灵魂的电子脉冲 ⚡';
+    if (t.includes('dream') || t.includes('sleep') || t.includes('cloud'))
+        return '梦境边缘的轻柔呢喃 ☁️';
+    if (t.includes('fire') || t.includes('hot') || t.includes('burn'))
+        return '燃烧激情的炽热旋律 🔥';
+    const defaults = [
+        '让旋律带走所有烦恼 ✨',
+        '此刻只属于你的时光 🎧',
+        '音乐是最好的陪伴 🎵',
+        '沉浸在声音的海洋里 🌊'
+    ];
+    return defaults[Math.floor(Math.random() * defaults.length)];
+};
+
+// --- Component: SharePoster Modal ---
+const SharePoster = ({ track, onClose }) => {
+    const posterRef = useRef(null);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [posterUrl, setPosterUrl] = useState(null);
+    const vibeText = getVibeDescription(track.title);
+    const today = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+
+    const generatePoster = async () => {
+        if (!posterRef.current) return;
+        setIsGenerating(true);
+        try {
+            const canvas = await html2canvas(posterRef.current, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#020202'
+            });
+            const url = canvas.toDataURL('image/png');
+            setPosterUrl(url);
+        } catch (err) {
+            console.error('Failed to generate poster:', err);
+        }
+        setIsGenerating(false);
+    };
+
+    const downloadPoster = () => {
+        if (!posterUrl) return;
+        const link = document.createElement('a');
+        link.download = `NSRL_${track.title}_${today}.png`;
+        link.href = posterUrl;
+        link.click();
+    };
+
+    useEffect(() => {
+        generatePoster();
+    }, []);
+
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+            {/* Close Button */}
+            <button onClick={onClose} className="absolute top-6 right-6 text-white/60 hover:text-white transition-colors">
+                <X size={28} />
+            </button>
+
+            <div className="flex flex-col items-center gap-6 max-w-sm w-full">
+                {/* Poster Preview */}
+                <div
+                    ref={posterRef}
+                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative bg-[#020202] p-6 flex flex-col items-center justify-between"
+                    style={{ minHeight: '480px' }}
+                >
+                    {/* Background Glow */}
+                    <div className="absolute inset-0 z-0 pointer-events-none">
+                        <div className="absolute top-[-30%] left-[-20%] w-[80%] h-[80%] bg-gradient-to-br from-[#FF3300] via-[#8B0000] to-transparent blur-[80px] opacity-60" />
+                        <div className="absolute bottom-[-30%] right-[-20%] w-[80%] h-[80%] bg-gradient-to-tl from-[#3300FF] via-[#1A0033] to-transparent blur-[80px] opacity-60" />
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+                    </div>
+
+                    {/* Top Brand */}
+                    <div className="relative z-10 flex items-center gap-2">
+                        <span className="font-bold tracking-[0.2em] text-xs text-white/60 font-sans">NSRL</span>
+                        <span className="text-[8px] bg-[#FF3300] text-black font-extrabold px-1.5 py-0.5 rounded-sm tracking-wide font-sans">VISION</span>
+                    </div>
+
+                    {/* Center Content */}
+                    <div className="relative z-10 flex flex-col items-center gap-4 flex-1 justify-center">
+                        {/* Album Cover */}
+                        <div className="relative">
+                            <div className="absolute -inset-3 bg-gradient-to-br from-orange-500/30 to-purple-500/30 rounded-full blur-2xl" />
+                            <img
+                                src={track.cover}
+                                alt={track.title}
+                                crossOrigin="anonymous"
+                                className="w-36 h-36 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10"
+                            />
+                        </div>
+
+                        {/* Song Info */}
+                        <div className="text-center mt-4">
+                            <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">{track.title}</h3>
+                            <p className="text-sm text-white/60">{track.artist}</p>
+                        </div>
+
+                        {/* Vibe Description */}
+                        <div className="mt-4 px-4 py-2 bg-white/5 backdrop-blur rounded-full border border-white/10">
+                            <p className="text-sm text-white/80 font-light tracking-wide">「{vibeText}」</p>
+                        </div>
+                    </div>
+
+                    {/* Bottom Watermark */}
+                    <div className="relative z-10 text-center">
+                        <div className="w-24 h-[1px] bg-white/20 mx-auto mb-3" />
+                        <p className="text-[10px] text-white/40 tracking-widest">NSRL VISION · {today}</p>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 w-full">
+                    {isGenerating ? (
+                        <div className="flex-1 py-3 bg-white/10 rounded-full text-center text-white/60">
+                            生成中...
+                        </div>
+                    ) : posterUrl ? (
+                        <button
+                            onClick={downloadPoster}
+                            className="flex-1 py-3 bg-white text-black rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                        >
+                            <Download size={18} />
+                            保存到相册
+                        </button>
+                    ) : (
+                        <button
+                            onClick={generatePoster}
+                            className="flex-1 py-3 bg-white/10 text-white rounded-full font-bold hover:bg-white/20 transition-colors"
+                        >
+                            重新生成
+                        </button>
+                    )}
+                </div>
+
+                <p className="text-xs text-white/40 text-center">长按图片可直接保存 · 分享到朋友圈/小红书</p>
+            </div>
+        </div>
+    );
+};
+
 // --- Component: PlayerView (1:1 Restoration) ---
 const PlayerView = ({ track, onReset }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    const [showSharePoster, setShowSharePoster] = useState(false);
     const audioRef = useRef(null);
 
     // Auto Play + Media Session API for background playback
@@ -283,6 +438,14 @@ const PlayerView = ({ track, onReset }) => {
                     >
                         <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                     </button>
+
+                    {/* Share */}
+                    <button
+                        onClick={() => setShowSharePoster(true)}
+                        className="text-white/40 hover:text-white transition-colors p-2"
+                    >
+                        <Share2 size={20} />
+                    </button>
                 </div>
             </div>
 
@@ -291,8 +454,13 @@ const PlayerView = ({ track, onReset }) => {
                 src={audioSource}
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
-                crossOrigin="anonymous" // Support proxy
+                crossOrigin="anonymous"
             />
+
+            {/* Share Poster Modal */}
+            {showSharePoster && (
+                <SharePoster track={track} onClose={() => setShowSharePoster(false)} />
+            )}
         </div>
     );
 };
