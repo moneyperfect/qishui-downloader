@@ -73,10 +73,8 @@ const PlayerView = ({ track, onReset }) => {
         }
     };
 
-    // Proxied URL handling
-    const audioSource = track.audioSrc.startsWith('/')
-        ? `http://localhost:8000${track.audioSrc}` // Dev environment adjustment
-        : track.audioSrc;
+    // iTunes returns full URL, no proxy needed
+    const audioSource = track.audioSrc;
 
     return (
         <div className="fixed inset-0 z-50 flex flex-col bg-[#020202] text-white overflow-hidden font-serif selection:bg-orange-500/30">
@@ -248,7 +246,7 @@ export default function App() {
         if (!inputVal.trim()) return;
         setStatus('analyzing');
 
-        const API_BASE = 'http://localhost:8000';
+        const API_BASE = 'https://ipcgfdxhpypmfgqsyujh.supabase.co/functions/v1';
         const queryPayload = artistVal.trim() ? `${inputVal.trim()} ${artistVal.trim()}` : inputVal.trim();
 
         try {
