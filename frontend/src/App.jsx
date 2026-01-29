@@ -41,6 +41,52 @@ const PosterCard = ({ className, imgUrl, delay, overlayColor }) => (
 
 // AIBadge component removed - features not yet implemented
 
+// --- Component: MobileOrbs (Mobile-only floating visual elements) ---
+const MobileOrbs = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none md:hidden z-10">
+        {/* Top-left floating ring */}
+        <div
+            className="absolute top-[15%] left-[8%] w-24 h-24 rounded-full border border-orange-500/30 animate-mobile-float"
+            style={{ animationDelay: '0s' }}
+        >
+            <div className="absolute inset-2 rounded-full border border-orange-400/20 animate-pulse-slow" />
+            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-sm" />
+        </div>
+
+        {/* Top-right glow orb */}
+        <div
+            className="absolute top-[20%] right-[12%] w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/10 blur-xl animate-mobile-float"
+            style={{ animationDelay: '1s' }}
+        />
+
+        {/* Bottom-left pulsing dot */}
+        <div
+            className="absolute bottom-[25%] left-[15%] w-3 h-3 rounded-full bg-orange-400/60 animate-pulse shadow-[0_0_20px_rgba(255,100,0,0.4)]"
+            style={{ animationDelay: '0.5s' }}
+        />
+
+        {/* Bottom-right floating ring */}
+        <div
+            className="absolute bottom-[30%] right-[10%] w-20 h-20 rounded-full border border-blue-500/20 animate-mobile-float"
+            style={{ animationDelay: '2s' }}
+        >
+            <div className="absolute inset-3 rounded-full border border-purple-400/15" />
+        </div>
+
+        {/* Center-right small orb */}
+        <div
+            className="absolute top-[45%] right-[5%] w-2 h-2 rounded-full bg-white/40 animate-pulse-slow"
+            style={{ animationDelay: '1.5s' }}
+        />
+
+        {/* Center-left accent glow */}
+        <div
+            className="absolute top-[50%] left-[5%] w-12 h-12 rounded-full bg-gradient-to-tr from-red-500/15 to-orange-500/10 blur-lg animate-mobile-float"
+            style={{ animationDelay: '2.5s' }}
+        />
+    </div>
+);
+
 // --- Component: PlayerView (1:1 Restoration) ---
 const PlayerView = ({ track, onReset }) => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -305,6 +351,9 @@ export default function App() {
 
                 {/* 1. Landing View */}
                 <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 px-4 ${status === 'idle' ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
+                    {/* Mobile-only floating orbs */}
+                    <MobileOrbs />
+
                     <PosterCard className="left-[5%] xl:left-[10%] rotate-y-12" imgUrl="https://images.unsplash.com/photo-1461360370896-922624d12aa1?q=80&w=800&auto=format&fit=crop" delay={0} overlayColor="from-orange-500/20 to-red-900/40" />
 
                     <div className="max-w-4xl text-center space-y-4 md:space-y-8 z-20 transform translate-y-[-10px] w-full">
@@ -366,6 +415,8 @@ export default function App() {
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
                 @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+                @keyframes mobile-float { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; } 50% { transform: translateY(-15px) scale(1.05); opacity: 0.9; } }
+                .animate-mobile-float { animation: mobile-float 5s ease-in-out infinite; }
             `}</style>
         </div>
     );
