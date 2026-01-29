@@ -177,18 +177,21 @@ const SharePoster = ({ track, onClose }) => {
     }, [vibeLoaded]);
 
     return (
-        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
-            {/* Close Button */}
-            <button onClick={onClose} className="absolute top-6 right-6 text-white/60 hover:text-white transition-colors">
-                <X size={28} />
+        <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4">
+            {/* Close Button - More visible on mobile */}
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+            >
+                <X size={24} />
             </button>
 
-            <div className="flex flex-col items-center gap-6 max-w-sm w-full">
+            <div className="flex flex-col items-center gap-4 max-w-sm w-full">
                 {/* Poster Preview */}
                 <div
                     ref={posterRef}
                     className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative bg-[#020202] p-6 flex flex-col items-center justify-between"
-                    style={{ minHeight: '480px' }}
+                    style={{ minHeight: '400px' }}
                 >
                     {/* Solid Gradient Background (html2canvas compatible) */}
                     <div
@@ -218,75 +221,82 @@ const SharePoster = ({ track, onClose }) => {
                     </div>
 
                     {/* Center Content */}
-                    <div className="relative z-10 flex flex-col items-center gap-4 flex-1 justify-center">
+                    <div className="relative z-10 flex flex-col items-center gap-3 flex-1 justify-center">
                         {/* Album Cover */}
                         <div className="relative">
-                            <div className="absolute -inset-3 bg-gradient-to-br from-orange-500/30 to-purple-500/30 rounded-full blur-2xl" />
+                            <div className="absolute -inset-2 bg-gradient-to-br from-orange-500/30 to-purple-500/30 rounded-full blur-xl" />
                             <img
                                 src={track.cover}
                                 alt={track.title}
                                 crossOrigin="anonymous"
-                                className="w-36 h-36 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10"
+                                className="w-28 h-28 rounded-full object-cover border-2 border-white/10 shadow-2xl relative z-10"
                             />
                         </div>
 
                         {/* Song Info */}
-                        <div className="text-center mt-4">
-                            <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">{track.title}</h3>
-                            <p className="text-sm text-white/60">{track.artist}</p>
+                        <div className="text-center mt-2">
+                            <h3 className="text-lg font-bold text-white mb-0.5 line-clamp-1">{track.title}</h3>
+                            <p className="text-xs text-white/60">{track.artist}</p>
                         </div>
 
                         {/* Vibe Description */}
-                        <div className="mt-4 px-4 py-2 bg-white/5 backdrop-blur rounded-full border border-white/10">
-                            <p className="text-sm text-white/80 font-light tracking-wide">「{vibeText}」</p>
+                        <div className="mt-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+                            <p className="text-xs text-white/80 font-light tracking-wide">「{vibeText}」</p>
                         </div>
                     </div>
 
                     {/* Bottom: QR Code + Watermark */}
-                    <div className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="w-16 h-[1px] bg-white/20" />
-                        <div className="flex items-center gap-3 mt-2">
-                            <div className="bg-white p-1 rounded-sm">
+                    <div className="relative z-10 flex flex-col items-center gap-1">
+                        <div className="w-12 h-[1px] bg-white/20" />
+                        <div className="flex items-center gap-2 mt-1">
+                            <div className="bg-white p-0.5 rounded-sm">
                                 <QRCodeSVG
                                     value="https://dl.leizhen2046.xyz"
-                                    size={40}
+                                    size={32}
                                     level="L"
                                     includeMargin={false}
                                 />
                             </div>
                             <div className="text-left">
-                                <p className="text-[9px] text-white/60 font-sans tracking-wide">扫码体验更多氛围</p>
-                                <p className="text-[8px] text-white/30 font-sans">NSRL VISION · {today}</p>
+                                <p className="text-[8px] text-white/60 font-sans">扫码体验</p>
+                                <p className="text-[7px] text-white/30 font-sans">NSRL · {today}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-4 w-full">
+                {/* Action Buttons - Two buttons side by side */}
+                <div className="flex gap-3 w-full">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 py-3 bg-white/10 text-white rounded-full font-medium flex items-center justify-center gap-2 hover:bg-white/20 transition-colors text-sm"
+                    >
+                        <X size={16} />
+                        关闭
+                    </button>
                     {isGenerating ? (
-                        <div className="flex-1 py-3 bg-white/10 rounded-full text-center text-white/60">
+                        <div className="flex-1 py-3 bg-white/20 rounded-full text-center text-white/60 text-sm">
                             生成中...
                         </div>
                     ) : posterUrl ? (
                         <button
                             onClick={downloadPoster}
-                            className="flex-1 py-3 bg-white text-black rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                            className="flex-1 py-3 bg-white text-black rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors text-sm"
                         >
-                            <Download size={18} />
-                            保存到相册
+                            <Download size={16} />
+                            保存图片
                         </button>
                     ) : (
                         <button
                             onClick={generatePoster}
-                            className="flex-1 py-3 bg-white/10 text-white rounded-full font-bold hover:bg-white/20 transition-colors"
+                            className="flex-1 py-3 bg-white/20 text-white rounded-full font-medium hover:bg-white/30 transition-colors text-sm"
                         >
                             重新生成
                         </button>
                     )}
                 </div>
 
-                <p className="text-xs text-white/40 text-center">长按图片可直接保存 · 分享到朋友圈/小红书</p>
+                <p className="text-[10px] text-white/30 text-center">长按图片可直接保存</p>
             </div>
         </div>
     );
@@ -296,9 +306,44 @@ const SharePoster = ({ track, onClose }) => {
 const PlayerView = ({ track, onReset }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
     const [showSharePoster, setShowSharePoster] = useState(false);
+    const [likeToast, setLikeToast] = useState('');
     const audioRef = useRef(null);
+
+    // Check if song is already liked on mount
+    const getLikedSongs = () => {
+        try {
+            return JSON.parse(localStorage.getItem('likedSongs') || '[]');
+        } catch { return []; }
+    };
+
+    const [isLiked, setIsLiked] = useState(() => {
+        const liked = getLikedSongs();
+        return liked.some(s => s.title === track.title && s.artist === track.artist);
+    });
+
+    // Handle like toggle with localStorage persistence
+    const handleLike = () => {
+        const liked = getLikedSongs();
+        const songKey = { title: track.title, artist: track.artist, cover: track.cover };
+
+        if (isLiked) {
+            // Remove from liked
+            const updated = liked.filter(s => !(s.title === track.title && s.artist === track.artist));
+            localStorage.setItem('likedSongs', JSON.stringify(updated));
+            setIsLiked(false);
+            setLikeToast('已取消收藏');
+        } else {
+            // Add to liked
+            liked.push({ ...songKey, likedAt: new Date().toISOString() });
+            localStorage.setItem('likedSongs', JSON.stringify(liked));
+            setIsLiked(true);
+            setLikeToast('已收藏到喜欢');
+        }
+
+        // Clear toast after 2s
+        setTimeout(() => setLikeToast(''), 2000);
+    };
 
     // Auto Play + Media Session API for background playback
     useEffect(() => {
@@ -405,28 +450,23 @@ const PlayerView = ({ track, onReset }) => {
                     {/* Pulse Glow (The Aura) */}
                     <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vw] h-[75vw] md:w-[30rem] md:h-[30rem] rounded-full bg-gradient-to-tr ${track.colors[0]} to-${track.colors[1]} blur-[80px] transition-all duration-1000 ease-in-out ${isPlaying ? 'opacity-40 scale-105' : 'opacity-20 scale-90'}`} />
 
-                    {/* Mobile Audio Visualizer Bars - Only visible on mobile */}
-                    <div className={`md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] pointer-events-none z-10 transition-opacity duration-500 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}>
-                        {/* Circular Audio Bars */}
-                        {[...Array(24)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute left-1/2 top-1/2 origin-bottom"
-                                style={{
-                                    transform: `translate(-50%, -100%) rotate(${i * 15}deg)`,
-                                    height: '45vw'
-                                }}
-                            >
-                                <div
-                                    className={`w-[2px] bg-gradient-to-t from-orange-500/80 via-purple-500/60 to-transparent rounded-full ${isPlaying ? 'animate-equalizer' : ''}`}
-                                    style={{
-                                        height: `${12 + Math.sin(i * 0.7) * 8}%`,
-                                        animationDelay: `${i * 0.05}s`,
-                                        animationDuration: `${0.4 + Math.random() * 0.3}s`
-                                    }}
-                                />
-                            </div>
-                        ))}
+                    {/* Mobile Ambient Effects - Floating orbs and rings */}
+                    <div className={`md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] h-[95vw] pointer-events-none z-10 transition-opacity duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-40'}`}>
+                        {/* Expanding pulse rings */}
+                        <div className={`absolute inset-[5%] rounded-full border border-white/10 ${isPlaying ? 'animate-ping-slow' : ''}`} style={{ animationDuration: '3s' }} />
+                        <div className={`absolute inset-[15%] rounded-full border border-orange-500/15 ${isPlaying ? 'animate-ping-slow' : ''}`} style={{ animationDuration: '4s', animationDelay: '1s' }} />
+
+                        {/* Floating ambient dots */}
+                        <div className="absolute top-[10%] left-[20%] w-2 h-2 rounded-full bg-orange-400/60 animate-mobile-float shadow-[0_0_15px_rgba(255,100,0,0.4)]" style={{ animationDelay: '0s' }} />
+                        <div className="absolute top-[15%] right-[15%] w-1.5 h-1.5 rounded-full bg-purple-400/50 animate-mobile-float shadow-[0_0_10px_rgba(147,51,234,0.3)]" style={{ animationDelay: '0.5s' }} />
+                        <div className="absolute bottom-[20%] left-[15%] w-1 h-1 rounded-full bg-white/50 animate-mobile-float" style={{ animationDelay: '1s' }} />
+                        <div className="absolute bottom-[15%] right-[20%] w-2.5 h-2.5 rounded-full bg-orange-300/40 animate-mobile-float shadow-[0_0_20px_rgba(255,150,50,0.3)]" style={{ animationDelay: '1.5s' }} />
+                        <div className="absolute top-[50%] left-[5%] w-1.5 h-1.5 rounded-full bg-purple-300/40 animate-mobile-float" style={{ animationDelay: '2s' }} />
+                        <div className="absolute top-[40%] right-[8%] w-1 h-1 rounded-full bg-white/40 animate-pulse" style={{ animationDelay: '0.3s' }} />
+
+                        {/* Soft glow accents */}
+                        <div className="absolute top-[25%] left-[10%] w-8 h-8 rounded-full bg-gradient-radial from-orange-500/20 to-transparent blur-md animate-pulse-slow" />
+                        <div className="absolute bottom-[25%] right-[10%] w-10 h-10 rounded-full bg-gradient-radial from-purple-500/15 to-transparent blur-lg animate-pulse-slow" style={{ animationDelay: '2s' }} />
                     </div>
 
                     {/* The Full-Bleed Vinyl */}
@@ -506,10 +546,10 @@ const PlayerView = ({ track, onReset }) => {
                         {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" className="ml-1" />}
                     </button>
 
-                    {/* Heart */}
+                    {/* Heart - saves to favorites */}
                     <button
-                        onClick={() => setIsLiked(!isLiked)}
-                        className={`transition-colors p-2 ${isLiked ? 'text-red-500' : 'text-white/40 hover:text-white'}`}
+                        onClick={handleLike}
+                        className={`transition-all p-2 ${isLiked ? 'text-red-500 scale-110' : 'text-white/40 hover:text-white'}`}
                     >
                         <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                     </button>
@@ -531,6 +571,16 @@ const PlayerView = ({ track, onReset }) => {
                 onEnded={() => setIsPlaying(false)}
                 crossOrigin="anonymous"
             />
+
+            {/* Like Toast Notification */}
+            {likeToast && (
+                <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/80 backdrop-blur-md rounded-full border border-white/10 text-white text-sm animate-fade-in-up">
+                    <span className="flex items-center gap-2">
+                        <Heart size={16} fill={isLiked ? "currentColor" : "none"} className={isLiked ? 'text-red-500' : ''} />
+                        {likeToast}
+                    </span>
+                </div>
+            )}
 
             {/* Share Poster Modal */}
             {showSharePoster && (
