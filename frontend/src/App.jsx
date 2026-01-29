@@ -187,82 +187,111 @@ const SharePoster = ({ track, onClose }) => {
             </button>
 
             <div className="flex flex-col items-center gap-4 max-w-sm w-full">
-                {/* Poster Preview */}
+                {/* Poster Preview - Ticket Stub Style */}
                 <div
                     ref={posterRef}
-                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative bg-[#020202] p-6 flex flex-col items-center justify-between"
-                    style={{ minHeight: '400px' }}
+                    className="w-full aspect-[3/4] rounded-xl overflow-hidden relative flex flex-col"
+                    style={{ minHeight: '420px' }}
                 >
-                    {/* Solid Gradient Background (html2canvas compatible) */}
+                    {/* Blurred Cover Color Background */}
                     <div
                         className="absolute inset-0 z-0"
                         style={{
-                            background: 'linear-gradient(145deg, #1a0a0a 0%, #0a0a15 40%, #0a0510 70%, #050510 100%)'
-                        }}
-                    />
-                    {/* Accent Color Overlays */}
-                    <div
-                        className="absolute top-0 left-0 w-full h-1/2 z-0"
-                        style={{
-                            background: 'radial-gradient(ellipse at 30% 20%, rgba(255,51,0,0.25) 0%, transparent 60%)'
+                            background: `linear-gradient(180deg, ${track.colors?.[0] || '#1a0a0a'} 0%, #0a0808 60%, #050505 100%)`
                         }}
                     />
                     <div
-                        className="absolute bottom-0 right-0 w-full h-1/2 z-0"
+                        className="absolute inset-0 z-0 opacity-60"
                         style={{
-                            background: 'radial-gradient(ellipse at 70% 80%, rgba(60,0,120,0.3) 0%, transparent 60%)'
+                            backgroundImage: `url(${track.cover})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            filter: 'blur(60px) saturate(1.2)'
                         }}
                     />
+                    {/* Noise overlay on poster */}
+                    <div
+                        className="absolute inset-0 z-[1] opacity-[0.12] mix-blend-overlay pointer-events-none"
+                        style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}
+                    />
+                    {/* Vignette */}
+                    <div className="absolute inset-0 z-[2] bg-gradient-to-b from-transparent via-transparent to-black/60 pointer-events-none" />
 
-                    {/* Top Brand */}
-                    <div className="relative z-10 flex items-center gap-2">
-                        <span className="font-bold tracking-[0.2em] text-xs text-white/60 font-sans">NSRL</span>
-                        <span className="text-[8px] bg-[#FF3300] text-black font-extrabold px-1.5 py-0.5 rounded-sm tracking-wide font-sans">VISION</span>
-                    </div>
-
-                    {/* Center Content */}
-                    <div className="relative z-10 flex flex-col items-center gap-3 flex-1 justify-center">
-                        {/* Album Cover */}
+                    {/* Top Section: Vinyl Cover */}
+                    <div className="relative z-10 flex-1 flex flex-col items-center justify-center pt-8 pb-4">
+                        {/* Album Art as Vinyl */}
                         <div className="relative">
-                            <div className="absolute -inset-2 bg-gradient-to-br from-orange-500/30 to-purple-500/30 rounded-full blur-xl" />
-                            <img
-                                src={track.cover}
-                                alt={track.title}
-                                crossOrigin="anonymous"
-                                className="w-28 h-28 rounded-full object-cover border-2 border-white/10 shadow-2xl relative z-10"
-                            />
+                            <div className="absolute -inset-4 bg-black/30 rounded-full blur-2xl" />
+                            <div
+                                className="w-32 h-32 rounded-full overflow-hidden shadow-2xl border-4 border-black/30 relative"
+                                style={{ boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
+                            >
+                                <img
+                                    src={track.cover}
+                                    alt={track.title}
+                                    crossOrigin="anonymous"
+                                    className="w-full h-full object-cover"
+                                />
+                                {/* Vinyl grooves overlay */}
+                                <div
+                                    className="absolute inset-0 opacity-20 pointer-events-none"
+                                    style={{ background: 'repeating-radial-gradient(#000 0, #000 1px, transparent 2px, transparent 3px)' }}
+                                />
+                                {/* Center hole */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-black rounded-full border border-white/10" />
+                            </div>
                         </div>
 
                         {/* Song Info */}
-                        <div className="text-center mt-2">
-                            <h3 className="text-lg font-bold text-white mb-0.5 line-clamp-1">{track.title}</h3>
-                            <p className="text-xs text-white/60">{track.artist}</p>
-                        </div>
-
-                        {/* Vibe Description */}
-                        <div className="mt-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
-                            <p className="text-xs text-white/80 font-light tracking-wide">「{vibeText}」</p>
+                        <div className="text-center mt-6 px-6">
+                            <h3 className="text-xl font-serif font-bold text-white leading-tight line-clamp-2 drop-shadow-lg">
+                                {track.title}
+                            </h3>
+                            <p className="mt-2 text-[10px] font-sans tracking-[0.2em] text-white/50 uppercase">
+                                {track.artist}
+                            </p>
                         </div>
                     </div>
 
-                    {/* Bottom: QR Code + Watermark */}
-                    <div className="relative z-10 flex flex-col items-center gap-1">
-                        <div className="w-12 h-[1px] bg-white/20" />
-                        <div className="flex items-center gap-2 mt-1">
-                            <div className="bg-white p-0.5 rounded-sm">
+                    {/* Middle Section: Highlight Lyric with typewriter style */}
+                    <div className="relative z-10 px-6 py-4 flex-shrink-0">
+                        <div className="border-t border-b border-white/10 py-4">
+                            <p className="text-center text-sm text-white/80 font-mono italic leading-relaxed">
+                                "{vibeText}"
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Bottom Section: QR + Branding */}
+                    <div className="relative z-10 px-6 pb-5 flex items-center justify-between flex-shrink-0">
+                        {/* Left: Tiny QR */}
+                        <div className="flex items-center gap-2">
+                            <div className="bg-white/90 p-0.5 rounded-sm">
                                 <QRCodeSVG
                                     value="https://dl.leizhen2046.xyz"
-                                    size={32}
+                                    size={24}
                                     level="L"
                                     includeMargin={false}
                                 />
                             </div>
-                            <div className="text-left">
-                                <p className="text-[8px] text-white/60 font-sans">扫码体验</p>
-                                <p className="text-[7px] text-white/30 font-sans">NSRL · {today}</p>
-                            </div>
+                            <span className="text-[7px] text-white/40 font-sans">扫码体验</span>
+                        </div>
+
+                        {/* Right: Branding */}
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-[8px] tracking-[0.15em] text-white/40 font-sans">NSRL</span>
+                            <span className="text-[6px] bg-[#FF3300] text-black font-bold px-1 py-0.5 rounded-[2px]">VISION</span>
                         </div>
                     </div>
+
+                    {/* Ticket Stub Perforation Line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[1px] z-10"
+                        style={{
+                            backgroundImage: 'linear-gradient(90deg, transparent 0%, transparent 45%, white 45%, white 55%, transparent 55%, transparent 100%)',
+                            backgroundSize: '8px 1px',
+                            opacity: 0.15
+                        }}
+                    />
                 </div>
 
                 {/* Action Buttons - Two buttons side by side */}
@@ -470,7 +499,7 @@ const PlayerView = ({ track, onReset }) => {
                     </div>
 
                     {/* The Full-Bleed Vinyl */}
-                    <div className="relative w-[80vw] h-[80vw] md:w-[32rem] md:h-[32rem] rounded-full shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden border border-white/5 transition-transform duration-700"
+                    <div className="relative w-[85vw] h-[85vw] md:w-[32rem] md:h-[32rem] rounded-full shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden border border-white/5 transition-transform duration-700"
                         style={{
                             animation: 'spin 12s linear infinite',
                             animationPlayState: isPlaying ? 'running' : 'paused'
@@ -485,8 +514,14 @@ const PlayerView = ({ track, onReset }) => {
                                 background: 'repeating-radial-gradient(#000 0, #000 2px, transparent 3px, transparent 4px)'
                             }} />
 
-                        {/* Light Reflection */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-black/50 pointer-events-none" />
+                        {/* Premium Vinyl Gloss Reflection */}
+                        <div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                                background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)'
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-black/40 pointer-events-none" />
 
                         {/* Tiny Center Hole */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 bg-[#0a0a0a] rounded-full shadow-inner border border-white/10" />
@@ -673,8 +708,13 @@ export default function App() {
             <div className={`absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ${status === 'player' ? 'opacity-0' : 'opacity-50'}`}>
                 <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[90%] bg-gradient-to-br from-[#FF3300] via-[#8B0000] to-transparent blur-[120px] animate-pulse-slow" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[90%] bg-gradient-to-tl from-[#3300FF] via-[#1A0033] to-transparent blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
-                <div className="absolute inset-0 opacity-[0.25] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
             </div>
+
+            {/* Global Film Grain Texture - Always on top */}
+            <div
+                className="fixed inset-0 z-50 pointer-events-none opacity-[0.08] mix-blend-overlay"
+                style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}
+            />
 
             {/* Top Bar (Only visible in Idle/Analyzing) */}
             <div className={`absolute top-6 left-6 md:top-8 md:left-8 z-20 flex items-center gap-2 cursor-pointer transition-opacity duration-500 ${status === 'player' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} onClick={() => { setStatus('idle'); setInputVal(''); }}>
