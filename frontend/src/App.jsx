@@ -94,7 +94,7 @@ const PlayerView = ({ track, onReset }) => {
     const [isLiked, setIsLiked] = useState(false);
     const audioRef = useRef(null);
 
-    // Auto Play
+    // Auto Play + Media Session API for background playback
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = 0.8;
@@ -102,7 +102,55 @@ const PlayerView = ({ track, onReset }) => {
                 .then(() => setIsPlaying(true))
                 .catch(err => console.error("Auto-play failed:", err));
         }
-        return () => { if (audioRef.current) audioRef.current.pause(); };
+
+        // Register Media Session for lock screen / notification controls
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: track.title || 'Unknown Title',
+                artist: track.artist || 'Unknown Artist',
+                album: 'NSRL Vision',
+                artwork: [
+                    { src: track.cover, sizes: '96x96', type: 'image/jpeg' },
+                    { src: track.cover, sizes: '128x128', type: 'image/jpeg' },
+                    { src: track.cover, sizes: '192x192', type: 'image/jpeg' },
+                    { src: track.cover, sizes: '256x256', type: 'image/jpeg' },
+                    { src: track.cover, sizes: '384x384', type: 'image/jpeg' },
+                    { src: track.cover, sizes: '512x512', type: 'image/jpeg' },
+                ]
+            });
+
+            // Play/Pause handlers for system media controls
+            navigator.mediaSession.setActionHandler('play', () => {
+                audioRef.current?.play();
+                setIsPlaying(true);
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                audioRef.current?.pause();
+                setIsPlaying(false);
+            });
+            navigator.mediaSession.setActionHandler('stop', () => {
+                audioRef.current?.pause();
+                setIsPlaying(false);
+                onReset();
+            });
+            // Seek handlers (for systems that support seek bar in notification)
+            navigator.mediaSession.setActionHandler('seekto', (details) => {
+                if (audioRef.current && details.seekTime !== undefined) {
+                    audioRef.current.currentTime = details.seekTime;
+                }
+            });
+        }
+
+        return () => {
+            if (audioRef.current) audioRef.current.pause();
+            // Clear media session handlers on unmount
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('play', null);
+                navigator.mediaSession.setActionHandler('pause', null);
+                navigator.mediaSession.setActionHandler('stop', null);
+                navigator.mediaSession.setActionHandler('seekto', null);
+            }
+        };
     }, [track]);
 
     const handleTimeUpdate = () => {
