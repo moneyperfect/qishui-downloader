@@ -92,24 +92,24 @@ const MobileOrbs = () => (
 const getVibeDescription = (title) => {
     const t = (title || '').toLowerCase();
     if (t.includes('love') || t.includes('heart') || t.includes('kiss') || t.includes('romance'))
-        return '心动时刻的浪漫絮语 💕';
+        return '心动时刻的浪漫絮语';
     if (t.includes('night') || t.includes('dark') || t.includes('moon') || t.includes('midnight'))
-        return '深夜独处的温柔治愈 🌙';
+        return '深夜独处的温柔治愈';
     if (t.includes('sun') || t.includes('summer') || t.includes('happy') || t.includes('bright'))
-        return '阳光洒落的明媚午后 ☀️';
+        return '阳光洒落的明媚午后';
     if (t.includes('rain') || t.includes('sad') || t.includes('cry') || t.includes('tear'))
-        return '雨天窗边的静谧思绪 🌧️';
+        return '雨天窗边的静谧思绪';
     if (t.includes('dance') || t.includes('party') || t.includes('club') || t.includes('beat'))
-        return '律动灵魂的电子脉冲 ⚡';
+        return '律动灵魂的电子脉冲';
     if (t.includes('dream') || t.includes('sleep') || t.includes('cloud'))
-        return '梦境边缘的轻柔呢喃 ☁️';
+        return '梦境边缘的轻柔呢喃';
     if (t.includes('fire') || t.includes('hot') || t.includes('burn'))
-        return '燃烧激情的炽热旋律 🔥';
+        return '燃烧激情的炽热旋律';
     const defaults = [
-        '让旋律带走所有烦恼 ✨',
-        '此刻只属于你的时光 🎧',
-        '音乐是最好的陪伴 🎵',
-        '沉浸在声音的海洋里 🌊'
+        '让旋律带走所有烦恼',
+        '此刻只属于你的时光',
+        '音乐是最好的陪伴',
+        '沉浸在声音的海洋里'
     ];
     return defaults[Math.floor(Math.random() * defaults.length)];
 };
@@ -166,12 +166,26 @@ const SharePoster = ({ track, onClose }) => {
                     className="w-full aspect-[3/4] rounded-2xl overflow-hidden relative bg-[#020202] p-6 flex flex-col items-center justify-between"
                     style={{ minHeight: '480px' }}
                 >
-                    {/* Background Glow */}
-                    <div className="absolute inset-0 z-0 pointer-events-none">
-                        <div className="absolute top-[-30%] left-[-20%] w-[80%] h-[80%] bg-gradient-to-br from-[#FF3300] via-[#8B0000] to-transparent blur-[80px] opacity-60" />
-                        <div className="absolute bottom-[-30%] right-[-20%] w-[80%] h-[80%] bg-gradient-to-tl from-[#3300FF] via-[#1A0033] to-transparent blur-[80px] opacity-60" />
-                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
-                    </div>
+                    {/* Solid Gradient Background (html2canvas compatible) */}
+                    <div
+                        className="absolute inset-0 z-0"
+                        style={{
+                            background: 'linear-gradient(145deg, #1a0a0a 0%, #0a0a15 40%, #0a0510 70%, #050510 100%)'
+                        }}
+                    />
+                    {/* Accent Color Overlays */}
+                    <div
+                        className="absolute top-0 left-0 w-full h-1/2 z-0"
+                        style={{
+                            background: 'radial-gradient(ellipse at 30% 20%, rgba(255,51,0,0.25) 0%, transparent 60%)'
+                        }}
+                    />
+                    <div
+                        className="absolute bottom-0 right-0 w-full h-1/2 z-0"
+                        style={{
+                            background: 'radial-gradient(ellipse at 70% 80%, rgba(60,0,120,0.3) 0%, transparent 60%)'
+                        }}
+                    />
 
                     {/* Top Brand */}
                     <div className="relative z-10 flex items-center gap-2">
@@ -362,7 +376,7 @@ const PlayerView = ({ track, onReset }) => {
                         }}>
 
                         {/* Cover Art */}
-                        <img src={track.img} alt="Cover" className="w-full h-full object-cover filter brightness-[0.9] contrast-[1.15]" />
+                        <img src={track.cover} alt="Cover" className="w-full h-full object-cover filter brightness-[0.9] contrast-[1.15]" />
 
                         {/* Texture: Repeating Radial Grooves */}
                         <div className="absolute inset-0 rounded-full opacity-30 pointer-events-none mix-blend-overlay"
