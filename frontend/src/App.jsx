@@ -242,10 +242,23 @@ const SharePoster = ({ track, onClose }) => {
                         </div>
                     </div>
 
-                    {/* Bottom Watermark */}
-                    <div className="relative z-10 text-center">
-                        <div className="w-24 h-[1px] bg-white/20 mx-auto mb-3" />
-                        <p className="text-[10px] text-white/40 tracking-widest">NSRL VISION · {today}</p>
+                    {/* Bottom: QR Code + Watermark */}
+                    <div className="relative z-10 flex flex-col items-center gap-2">
+                        <div className="w-16 h-[1px] bg-white/20" />
+                        <div className="flex items-center gap-3 mt-2">
+                            <div className="bg-white p-1 rounded-sm">
+                                <QRCodeSVG
+                                    value="https://qishui-downloader.vercel.app"
+                                    size={40}
+                                    level="L"
+                                    includeMargin={false}
+                                />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[9px] text-white/60 font-sans tracking-wide">扫码体验更多氛围</p>
+                                <p className="text-[8px] text-white/30 font-sans">NSRL VISION · {today}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
