@@ -529,8 +529,8 @@ export default function App() {
                     artist: data.artist,
                     theme: data.theme || 'AI Generated Vibe',
                     colors: data.colors,
-                    img: data.cover,
-                    audioSrc: data.audioSrc // Contains /proxy-stream?url=...
+                    cover: data.cover,
+                    audioSrc: data.audioSrc
                 });
                 setStatus('player');
             }, 800);
